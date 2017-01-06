@@ -18,38 +18,38 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         
+        // 替换  substringFromIndex:
         NSString *tmpSubFromStr = @"substringFromIndex:";
         NSString *tmpSafeSubFromStr = @"safeMutable_substringFromIndex:";
     
         [self exchangeImplementationWithClassStr:@"__NSCFString" originalMethodStr:tmpSubFromStr newMethodStr:tmpSafeSubFromStr];
         
         
+        // 替换  substringToIndex:
         NSString *tmpSubToStr = @"substringToIndex:";
         NSString *tmpSafeSubToStr = @"safeMutable_substringToIndex:";
     
         [self exchangeImplementationWithClassStr:@"__NSCFString" originalMethodStr:tmpSubToStr newMethodStr:tmpSafeSubToStr];
         
         
-        
+        // 替换  substringWithRange:
         NSString *tmpSubRangeStr = @"substringWithRange:";
         NSString *tmpSafeSubRangeStr = @"safeMutable_substringWithRange:";
     
         [self exchangeImplementationWithClassStr:@"__NSCFString" originalMethodStr:tmpSubRangeStr newMethodStr:tmpSafeSubRangeStr];
         
         
+        // 替换  rangeOfString:options:range:locale:
         NSString *tmpRangeOfStr = @"rangeOfString:options:range:locale:";
         NSString *tmpSafeRangeOfStr = @"safeMutable_rangeOfString:options:range:locale:";
         
-        
         [self exchangeImplementationWithClassStr:@"__NSCFString" originalMethodStr:tmpRangeOfStr newMethodStr:tmpSafeRangeOfStr];
         
-        
+        // 替换  appendString
         NSString *tmpAppendStr = @"appendString:";
         NSString *tmpSafeAppendStr = @"safeMutable_appendString:";
         
         [self exchangeImplementationWithClassStr:@"__NSCFString" originalMethodStr:tmpAppendStr newMethodStr:tmpSafeAppendStr];
-        
-        
         
     });
     

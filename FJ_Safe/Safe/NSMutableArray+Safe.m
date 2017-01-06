@@ -18,28 +18,32 @@
     //只执行一次这个方法
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        //替换 objectAtIndex
+        
+        //替换 objectAtIndex:
         NSString *tmpGetStr = @"objectAtIndex:";
         NSString *tmpSafeGetStr = @"safeMutable_objectAtIndex:";
+        [self exchangeImplementationWithClassStr:@"__NSArrayM" originalMethodStr:tmpGetStr newMethodStr:tmpSafeGetStr];
         
+        
+        //替换 removeObjectsInRange:
         NSString *tmpRemoveStr = @"removeObjectsInRange:";
         NSString *tmpSafeRemoveStr = @"safeMutable_removeObjectsInRange:";
         
+        [self exchangeImplementationWithClassStr:@"__NSArrayM" originalMethodStr:tmpRemoveStr newMethodStr:tmpSafeRemoveStr];
+        
+        
+        //替换 insertObject:atIndex:
         NSString *tmpInsertStr = @"insertObject:atIndex:";
         NSString *tmpSafeInsertStr = @"safeMutable_insertObject:atIndex:";
         
+        [self exchangeImplementationWithClassStr:@"__NSArrayM" originalMethodStr:tmpInsertStr newMethodStr:tmpSafeInsertStr];
+        
+        //替换 removeObject:inRange:
         NSString *tmpRemoveRangeStr = @"removeObject:inRange:";
         NSString *tmpSafeRemoveRangeStr = @"safeMutable_removeObject:inRange:";
         
-        
-        
-        [self exchangeImplementationWithClassStr:@"__NSArrayM" originalMethodStr:tmpGetStr newMethodStr:tmpSafeGetStr];
-        
-        [self exchangeImplementationWithClassStr:@"__NSArrayM" originalMethodStr:tmpRemoveStr newMethodStr:tmpSafeRemoveStr];
-        
-        [self exchangeImplementationWithClassStr:@"__NSArrayM" originalMethodStr:tmpInsertStr newMethodStr:tmpSafeInsertStr];
-        
         [self exchangeImplementationWithClassStr:@"__NSArrayM" originalMethodStr:tmpRemoveRangeStr newMethodStr:tmpSafeRemoveRangeStr];
+        
     });
     
 }

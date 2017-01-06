@@ -17,6 +17,7 @@
     //只执行一次这个方法
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
+        
         //替换 objectAtIndex
         NSString *tmpStr = @"objectAtIndex:";
         NSString *tmpFirstStr = @"safe_ZeroObjectAtIndex:";

@@ -19,6 +19,7 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         
+        // 替换 substringFromIndex:
         NSString *tmpSubFromStr = @"substringFromIndex:";
         NSString *tmpSafeSubFromStr = @"safe_substringFromIndex:";
         NSString *tmpSafePointSubFromStr = @"safePoint_substringFromIndex:";
@@ -29,7 +30,7 @@
         [self exchangeImplementationWithClassStr:@"NSTaggedPointerString" originalMethodStr:tmpSubFromStr newMethodStr:tmpSafePointSubFromStr];
         
         
-        
+        // 替换 substringToIndex:
         NSString *tmpSubToStr = @"substringToIndex:";
         NSString *tmpSafeSubToStr = @"safe_substringToIndex:";
         NSString *tmpSafePointSubToStr = @"safePoint_substringToIndex:";
@@ -40,7 +41,7 @@
         [self exchangeImplementationWithClassStr:@"NSTaggedPointerString" originalMethodStr:tmpSubToStr newMethodStr:tmpSafePointSubToStr];
         
         
-        
+        // 替换 substringWithRange:
         NSString *tmpSubRangeStr = @"substringWithRange:";
         NSString *tmpSafeSubRangeStr = @"safe_substringWithRange:";
         NSString *tmpSafePointSubRangeStr = @"safePoint_substringWithRange:";
@@ -51,7 +52,7 @@
         [self exchangeImplementationWithClassStr:@"NSTaggedPointerString" originalMethodStr:tmpSubRangeStr newMethodStr:tmpSafePointSubRangeStr];
         
         
-        
+        // 替换 rangeOfString:options:range:locale:
         NSString *tmpRangeOfStr = @"rangeOfString:options:range:locale:";
         NSString *tmpSafeRangeOfStr = @"safe_rangeOfString:options:range:locale:";
         NSString *tmpSafePointRangeOfStr = @"safePoint_rangeOfString:options:range:locale:";
@@ -99,6 +100,7 @@
 }
 
 #pragma mark --- implement method
+
 /****************************************  substringFromIndex:  ***********************************/
 /**
  从from位置截取字符串 对应 __NSCFConstantString

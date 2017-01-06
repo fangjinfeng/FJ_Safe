@@ -18,14 +18,16 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         
+        // 替换 removeObjectForKey:
         NSString *tmpRemoveStr = @"removeObjectForKey:";
         NSString *tmpSafeRemoveStr = @"safeMutable_removeObjectForKey:";
         
+        [self exchangeImplementationWithClassStr:@"__NSDictionaryM" originalMethodStr:tmpRemoveStr newMethodStr:tmpSafeRemoveStr];
+        
+        
+        // 替换 setObject:forKey:
         NSString *tmpSetStr = @"setObject:forKey:";
         NSString *tmpSafeSetRemoveStr = @"safeMutable_setObject:forKey:";
-    
-        
-        [self exchangeImplementationWithClassStr:@"__NSDictionaryM" originalMethodStr:tmpRemoveStr newMethodStr:tmpSafeRemoveStr];
         
         [self exchangeImplementationWithClassStr:@"__NSDictionaryM" originalMethodStr:tmpSetStr newMethodStr:tmpSafeSetRemoveStr];
     });
