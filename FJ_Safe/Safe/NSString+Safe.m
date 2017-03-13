@@ -9,6 +9,7 @@
 
 #import <objc/runtime.h>
 #import "NSString+Safe.h"
+#import "NSObject+Swizzling.h"
 
 @implementation NSString (Safe)
 
@@ -25,9 +26,13 @@
         NSString *tmpSafePointSubFromStr = @"safePoint_substringFromIndex:";
         
         
-        [self exchangeImplementationWithClassStr:@"__NSCFConstantString" originalMethodStr:tmpSubFromStr newMethodStr:tmpSafeSubFromStr];
+        [NSObject exchangeInstanceMethodWithSelfClass:NSClassFromString(@"__NSCFConstantString")
+                                     originalSelector:NSSelectorFromString(tmpSubFromStr)                                     swizzledSelector:NSSelectorFromString(tmpSafeSubFromStr)];
         
-        [self exchangeImplementationWithClassStr:@"NSTaggedPointerString" originalMethodStr:tmpSubFromStr newMethodStr:tmpSafePointSubFromStr];
+        [NSObject exchangeInstanceMethodWithSelfClass:NSClassFromString(@"NSTaggedPointerString")
+                                     originalSelector:NSSelectorFromString(tmpSubFromStr)                                     swizzledSelector:NSSelectorFromString(tmpSafePointSubFromStr)];
+        
+
         
         
         // 替换 substringToIndex:
@@ -36,9 +41,14 @@
         NSString *tmpSafePointSubToStr = @"safePoint_substringToIndex:";
         
         
-        [self exchangeImplementationWithClassStr:@"__NSCFConstantString" originalMethodStr:tmpSubToStr newMethodStr:tmpSafeSubToStr];
         
-        [self exchangeImplementationWithClassStr:@"NSTaggedPointerString" originalMethodStr:tmpSubToStr newMethodStr:tmpSafePointSubToStr];
+        [NSObject exchangeInstanceMethodWithSelfClass:NSClassFromString(@"__NSCFConstantString")
+                                     originalSelector:NSSelectorFromString(tmpSubToStr)                                     swizzledSelector:NSSelectorFromString(tmpSafeSubToStr)];
+        
+        [NSObject exchangeInstanceMethodWithSelfClass:NSClassFromString(@"NSTaggedPointerString")
+                                     originalSelector:NSSelectorFromString(tmpSubToStr)                                     swizzledSelector:NSSelectorFromString(tmpSafePointSubToStr)];
+        
+
         
         
         // 替换 substringWithRange:
@@ -47,9 +57,12 @@
         NSString *tmpSafePointSubRangeStr = @"safePoint_substringWithRange:";
         
         
-        [self exchangeImplementationWithClassStr:@"__NSCFConstantString" originalMethodStr:tmpSubRangeStr newMethodStr:tmpSafeSubRangeStr];
+        [NSObject exchangeInstanceMethodWithSelfClass:NSClassFromString(@"__NSCFConstantString")
+                                     originalSelector:NSSelectorFromString(tmpSubRangeStr)                                     swizzledSelector:NSSelectorFromString(tmpSafeSubRangeStr)];
         
-        [self exchangeImplementationWithClassStr:@"NSTaggedPointerString" originalMethodStr:tmpSubRangeStr newMethodStr:tmpSafePointSubRangeStr];
+        [NSObject exchangeInstanceMethodWithSelfClass:NSClassFromString(@"NSTaggedPointerString")
+                                     originalSelector:NSSelectorFromString(tmpSubRangeStr)                                     swizzledSelector:NSSelectorFromString(tmpSafePointSubRangeStr)];
+        
         
         
         // 替换 rangeOfString:options:range:locale:
@@ -58,45 +71,14 @@
         NSString *tmpSafePointRangeOfStr = @"safePoint_rangeOfString:options:range:locale:";
         
         
-        [self exchangeImplementationWithClassStr:@"__NSCFConstantString" originalMethodStr:tmpRangeOfStr newMethodStr:tmpSafeRangeOfStr];
+        [NSObject exchangeInstanceMethodWithSelfClass:NSClassFromString(@"__NSCFConstantString")
+                                     originalSelector:NSSelectorFromString(tmpRangeOfStr)                                     swizzledSelector:NSSelectorFromString(tmpSafeRangeOfStr)];
         
-        [self exchangeImplementationWithClassStr:@"NSTaggedPointerString" originalMethodStr:tmpRangeOfStr newMethodStr:tmpSafePointRangeOfStr];
-        
+        [NSObject exchangeInstanceMethodWithSelfClass:NSClassFromString(@"NSTaggedPointerString")
+                                     originalSelector:NSSelectorFromString(tmpRangeOfStr)                                     swizzledSelector:NSSelectorFromString(tmpSafePointRangeOfStr)];
         
         
     });
-    
-}
-
-// 获取 method
-+ (Method)methodOfClassStr:(NSString *)classStr selector:(SEL)selector {
-    return class_getInstanceMethod(NSClassFromString(classStr),selector);
-}
-
-// 添加 新方法 / 新方法 替换 原来 方法
-+ (void)exchangeImplementationWithClassStr:(NSString *)classStr originalMethodStr:(NSString *)originalMethodStr newMethodStr:(NSString *)newMethodStr {
-    
-    SEL originalSelector = NSSelectorFromString(originalMethodStr);
-    SEL swizzledSelector = NSSelectorFromString(newMethodStr);
-    
-    Method originalMethod = [NSString methodOfClassStr:classStr selector:NSSelectorFromString(originalMethodStr)];
-    Method swizzledMethod = [NSString methodOfClassStr:classStr selector:NSSelectorFromString(newMethodStr)];
-    
-    BOOL didAddMethod =
-    class_addMethod(NSClassFromString(classStr),
-                    originalSelector,
-                    method_getImplementation(swizzledMethod),
-                    method_getTypeEncoding(swizzledMethod));
-    
-    if (didAddMethod) {
-        class_replaceMethod(NSClassFromString(classStr),
-                            swizzledSelector,
-                            method_getImplementation(originalMethod),
-                            method_getTypeEncoding(originalMethod));
-        
-    } else {
-        method_exchangeImplementations(originalMethod, swizzledMethod);
-    }
 }
 
 #pragma mark --- implement method

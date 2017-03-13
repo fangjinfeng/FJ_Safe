@@ -7,6 +7,7 @@
 //
 
 #import <objc/runtime.h>
+#import "NSObject+Swizzling.h"
 #import "NSMutableString+Safe.h"
 
 @implementation NSMutableString (Safe)
@@ -22,69 +23,48 @@
         NSString *tmpSubFromStr = @"substringFromIndex:";
         NSString *tmpSafeSubFromStr = @"safeMutable_substringFromIndex:";
     
-        [self exchangeImplementationWithClassStr:@"__NSCFString" originalMethodStr:tmpSubFromStr newMethodStr:tmpSafeSubFromStr];
+        [NSObject exchangeInstanceMethodWithSelfClass:NSClassFromString(@"__NSCFString")
+                                     originalSelector:NSSelectorFromString(tmpSubFromStr)                                     swizzledSelector:NSSelectorFromString(tmpSafeSubFromStr)];
         
         
         // 替换  substringToIndex:
         NSString *tmpSubToStr = @"substringToIndex:";
         NSString *tmpSafeSubToStr = @"safeMutable_substringToIndex:";
     
-        [self exchangeImplementationWithClassStr:@"__NSCFString" originalMethodStr:tmpSubToStr newMethodStr:tmpSafeSubToStr];
+        [NSObject exchangeInstanceMethodWithSelfClass:NSClassFromString(@"__NSCFString")
+                                     originalSelector:NSSelectorFromString(tmpSubToStr)                                     swizzledSelector:NSSelectorFromString(tmpSafeSubToStr)];
         
         
         // 替换  substringWithRange:
         NSString *tmpSubRangeStr = @"substringWithRange:";
         NSString *tmpSafeSubRangeStr = @"safeMutable_substringWithRange:";
     
-        [self exchangeImplementationWithClassStr:@"__NSCFString" originalMethodStr:tmpSubRangeStr newMethodStr:tmpSafeSubRangeStr];
+        [NSObject exchangeInstanceMethodWithSelfClass:NSClassFromString(@"__NSCFString")
+                                     originalSelector:NSSelectorFromString(tmpSubRangeStr)                                     swizzledSelector:NSSelectorFromString(tmpSafeSubRangeStr)];
         
+
         
         // 替换  rangeOfString:options:range:locale:
         NSString *tmpRangeOfStr = @"rangeOfString:options:range:locale:";
         NSString *tmpSafeRangeOfStr = @"safeMutable_rangeOfString:options:range:locale:";
         
-        [self exchangeImplementationWithClassStr:@"__NSCFString" originalMethodStr:tmpRangeOfStr newMethodStr:tmpSafeRangeOfStr];
+        [NSObject exchangeInstanceMethodWithSelfClass:NSClassFromString(@"__NSCFString")
+                                     originalSelector:NSSelectorFromString(tmpRangeOfStr)                                     swizzledSelector:NSSelectorFromString(tmpSafeRangeOfStr)];
+        
         
         // 替换  appendString
         NSString *tmpAppendStr = @"appendString:";
         NSString *tmpSafeAppendStr = @"safeMutable_appendString:";
         
-        [self exchangeImplementationWithClassStr:@"__NSCFString" originalMethodStr:tmpAppendStr newMethodStr:tmpSafeAppendStr];
+        
+        [NSObject exchangeInstanceMethodWithSelfClass:NSClassFromString(@"__NSCFString")
+                                     originalSelector:NSSelectorFromString(tmpAppendStr)                                     swizzledSelector:NSSelectorFromString(tmpSafeAppendStr)];
+        
         
     });
     
 }
 
-// 获取 method
-+ (Method)methodOfClassStr:(NSString *)classStr selector:(SEL)selector {
-    return class_getInstanceMethod(NSClassFromString(classStr),selector);
-}
-
-// 添加 新方法 / 新方法 替换 原来 方法
-+ (void)exchangeImplementationWithClassStr:(NSString *)classStr originalMethodStr:(NSString *)originalMethodStr newMethodStr:(NSString *)newMethodStr {
-    
-    SEL originalSelector = NSSelectorFromString(originalMethodStr);
-    SEL swizzledSelector = NSSelectorFromString(newMethodStr);
-    
-    Method originalMethod = [NSMutableString methodOfClassStr:classStr selector:NSSelectorFromString(originalMethodStr)];
-    Method swizzledMethod = [NSMutableString methodOfClassStr:classStr selector:NSSelectorFromString(newMethodStr)];
-    
-    BOOL didAddMethod =
-    class_addMethod(NSClassFromString(classStr),
-                    originalSelector,
-                    method_getImplementation(swizzledMethod),
-                    method_getTypeEncoding(swizzledMethod));
-    
-    if (didAddMethod) {
-        class_replaceMethod(NSClassFromString(classStr),
-                            swizzledSelector,
-                            method_getImplementation(originalMethod),
-                            method_getTypeEncoding(originalMethod));
-        
-    } else {
-        method_exchangeImplementations(originalMethod, swizzledMethod);
-    }
-}
 
 #pragma mark --- implement method
 /****************************************  substringFromIndex:  ***********************************/

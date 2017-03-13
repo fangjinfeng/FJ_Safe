@@ -8,6 +8,7 @@
 
 #import <objc/runtime.h>
 #import "NSArray+Safe.h"
+#import "NSObject+Swizzling.h"
 
 @implementation NSArray (Safe)
 
@@ -24,45 +25,19 @@
         NSString *tmpThreeStr = @"safe_objectAtIndex:";
         NSString *tmpSecondStr = @"safe_singleObjectAtIndex:";
         
-        [self exchangeImplementationWithClassStr:@"__NSArray0" originalMethodStr:tmpStr newMethodStr:tmpFirstStr];
+        [NSObject exchangeInstanceMethodWithSelfClass:NSClassFromString(@"__NSArray0")
+                                     originalSelector:NSSelectorFromString(tmpStr)                                     swizzledSelector:NSSelectorFromString(tmpFirstStr)];
         
-        [self exchangeImplementationWithClassStr:@"__NSSingleObjectArrayI" originalMethodStr:tmpStr newMethodStr:tmpSecondStr];
+        [NSObject exchangeInstanceMethodWithSelfClass:NSClassFromString(@"__NSSingleObjectArrayI")
+                                     originalSelector:NSSelectorFromString(tmpStr)                                     swizzledSelector:NSSelectorFromString(tmpSecondStr)];
         
-        [self exchangeImplementationWithClassStr:@"__NSArrayI" originalMethodStr:tmpStr newMethodStr:tmpThreeStr];
+        [NSObject exchangeInstanceMethodWithSelfClass:NSClassFromString(@"__NSArrayI")
+                                     originalSelector:NSSelectorFromString(tmpStr)                                     swizzledSelector:NSSelectorFromString(tmpThreeStr)];
+        
     });
 
 }
 
-// 获取 method
-+ (Method)methodOfClassStr:(NSString *)classStr selector:(SEL)selector {
-    return class_getInstanceMethod(NSClassFromString(classStr),selector);
-}
-
-// 添加 新方法 / 新方法 替换 原来 方法
-+ (void)exchangeImplementationWithClassStr:(NSString *)classStr originalMethodStr:(NSString *)originalMethodStr newMethodStr:(NSString *)newMethodStr {
-    
-    SEL originalSelector = NSSelectorFromString(originalMethodStr);
-    SEL swizzledSelector = NSSelectorFromString(newMethodStr);
-    
-    Method originalMethod = [NSArray methodOfClassStr:classStr selector:NSSelectorFromString(originalMethodStr)];
-    Method swizzledMethod = [NSArray methodOfClassStr:classStr selector:NSSelectorFromString(newMethodStr)];
-    
-    BOOL didAddMethod =
-    class_addMethod(NSClassFromString(classStr),
-                    originalSelector,
-                    method_getImplementation(swizzledMethod),
-                    method_getTypeEncoding(swizzledMethod));
-    
-    if (didAddMethod) {
-        class_replaceMethod(NSClassFromString(classStr),
-                            swizzledSelector,
-                            method_getImplementation(originalMethod),
-                            method_getTypeEncoding(originalMethod));
-        
-    } else {
-        method_exchangeImplementations(originalMethod, swizzledMethod);
-    }
-}
 
 #pragma mark --- implement method
 

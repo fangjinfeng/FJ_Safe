@@ -8,7 +8,9 @@
 //
 
 #import <objc/runtime.h>
+#import "NSObject+Swizzling.h"
 #import "NSMutableArray+Safe.h"
+
 
 @implementation NSMutableArray (Safe)
 
@@ -22,61 +24,35 @@
         //替换 objectAtIndex:
         NSString *tmpGetStr = @"objectAtIndex:";
         NSString *tmpSafeGetStr = @"safeMutable_objectAtIndex:";
-        [self exchangeImplementationWithClassStr:@"__NSArrayM" originalMethodStr:tmpGetStr newMethodStr:tmpSafeGetStr];
-        
+        [NSObject exchangeInstanceMethodWithSelfClass:NSClassFromString(@"__NSArrayM")
+                                     originalSelector:NSSelectorFromString(tmpGetStr)                                     swizzledSelector:NSSelectorFromString(tmpSafeGetStr)];
         
         //替换 removeObjectsInRange:
         NSString *tmpRemoveStr = @"removeObjectsInRange:";
         NSString *tmpSafeRemoveStr = @"safeMutable_removeObjectsInRange:";
         
-        [self exchangeImplementationWithClassStr:@"__NSArrayM" originalMethodStr:tmpRemoveStr newMethodStr:tmpSafeRemoveStr];
+
+        [NSObject exchangeInstanceMethodWithSelfClass:NSClassFromString(@"__NSArrayM")
+                                     originalSelector:NSSelectorFromString(tmpRemoveStr)                                     swizzledSelector:NSSelectorFromString(tmpSafeRemoveStr)];
         
         
         //替换 insertObject:atIndex:
         NSString *tmpInsertStr = @"insertObject:atIndex:";
         NSString *tmpSafeInsertStr = @"safeMutable_insertObject:atIndex:";
         
-        [self exchangeImplementationWithClassStr:@"__NSArrayM" originalMethodStr:tmpInsertStr newMethodStr:tmpSafeInsertStr];
+        
+        [NSObject exchangeInstanceMethodWithSelfClass:NSClassFromString(@"__NSArrayM")
+                                     originalSelector:NSSelectorFromString(tmpInsertStr)                                     swizzledSelector:NSSelectorFromString(tmpSafeInsertStr)];
         
         //替换 removeObject:inRange:
         NSString *tmpRemoveRangeStr = @"removeObject:inRange:";
         NSString *tmpSafeRemoveRangeStr = @"safeMutable_removeObject:inRange:";
         
-        [self exchangeImplementationWithClassStr:@"__NSArrayM" originalMethodStr:tmpRemoveRangeStr newMethodStr:tmpSafeRemoveRangeStr];
+        [NSObject exchangeInstanceMethodWithSelfClass:NSClassFromString(@"__NSArrayM")
+                                     originalSelector:NSSelectorFromString(tmpRemoveRangeStr)                                     swizzledSelector:NSSelectorFromString(tmpSafeRemoveRangeStr)];
         
     });
     
-}
-
-// 获取 method
-+ (Method)methodOfClassStr:(NSString *)classStr selector:(SEL)selector {
-    return class_getInstanceMethod(NSClassFromString(classStr),selector);
-}
-
-// 添加 新方法 / 新方法 替换 原来 方法
-+ (void)exchangeImplementationWithClassStr:(NSString *)classStr originalMethodStr:(NSString *)originalMethodStr newMethodStr:(NSString *)newMethodStr {
-    
-    SEL originalSelector = NSSelectorFromString(originalMethodStr);
-    SEL swizzledSelector = NSSelectorFromString(newMethodStr);
-    
-    Method originalMethod = [NSMutableArray methodOfClassStr:classStr selector:NSSelectorFromString(originalMethodStr)];
-    Method swizzledMethod = [NSMutableArray methodOfClassStr:classStr selector:NSSelectorFromString(newMethodStr)];
-    
-    BOOL didAddMethod =
-    class_addMethod(NSClassFromString(classStr),
-                    originalSelector,
-                    method_getImplementation(swizzledMethod),
-                    method_getTypeEncoding(swizzledMethod));
-    
-    if (didAddMethod) {
-        class_replaceMethod(NSClassFromString(classStr),
-                            swizzledSelector,
-                            method_getImplementation(originalMethod),
-                            method_getTypeEncoding(originalMethod));
-        
-    } else {
-        method_exchangeImplementations(originalMethod, swizzledMethod);
-    }
 }
 
 #pragma mark --- implement method

@@ -20,6 +20,7 @@
 		30426B7D1E1E7D530077F3A8 /* NSMutableDictionary+Safe.m in Sources */ = {isa = PBXBuildFile; fileRef = 30426B761E1E7D530077F3A8 /* NSMutableDictionary+Safe.m */; };
 		30426B7E1E1E7D530077F3A8 /* NSMutableString+Safe.m in Sources */ = {isa = PBXBuildFile; fileRef = 30426B781E1E7D530077F3A8 /* NSMutableString+Safe.m */; };
 		30426B7F1E1E7D530077F3A8 /* NSString+Safe.m in Sources */ = {isa = PBXBuildFile; fileRef = 30426B7A1E1E7D530077F3A8 /* NSString+Safe.m */; };
+		304DF1CF1E76D126000328AF /* NSObject+Swizzling.m in Sources */ = {isa = PBXBuildFile; fileRef = 304DF1CE1E76D126000328AF /* NSObject+Swizzling.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -66,6 +67,8 @@
 		30426B781E1E7D530077F3A8 /* NSMutableString+Safe.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableString+Safe.m"; sourceTree = "<group>"; };
 		30426B791E1E7D530077F3A8 /* NSString+Safe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Safe.h"; sourceTree = "<group>"; };
 		30426B7A1E1E7D530077F3A8 /* NSString+Safe.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Safe.m"; sourceTree = "<group>"; };
+		304DF1CD1E76D126000328AF /* NSObject+Swizzling.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+Swizzling.h"; sourceTree = "<group>"; };
+		304DF1CE1E76D126000328AF /* NSObject+Swizzling.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+Swizzling.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -169,6 +172,8 @@
 				30426B781E1E7D530077F3A8 /* NSMutableString+Safe.m */,
 				30426B791E1E7D530077F3A8 /* NSString+Safe.h */,
 				30426B7A1E1E7D530077F3A8 /* NSString+Safe.m */,
+				304DF1CD1E76D126000328AF /* NSObject+Swizzling.h */,
+				304DF1CE1E76D126000328AF /* NSObject+Swizzling.m */,
 			);
 			path = Safe;
 			sourceTree = "<group>";
@@ -313,6 +318,7 @@
 				30426B7F1E1E7D530077F3A8 /* NSString+Safe.m in Sources */,
 				30426B3F1E1E7D430077F3A8 /* main.m in Sources */,
 				30426B7C1E1E7D530077F3A8 /* NSMutableArray+Safe.m in Sources */,
+				304DF1CF1E76D126000328AF /* NSObject+Swizzling.m in Sources */,
 				30426B7B1E1E7D530077F3A8 /* NSArray+Safe.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -545,6 +551,7 @@
 				30426B691E1E7D430077F3A8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		30426B6A1E1E7D430077F3A8 /* Build configuration list for PBXNativeTarget "FJ_SafeTests" */ = {
 			isa = XCConfigurationList;
@@ -553,6 +560,7 @@
 				30426B6C1E1E7D430077F3A8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		30426B6D1E1E7D430077F3A8 /* Build configuration list for PBXNativeTarget "FJ_SafeUITests" */ = {
 			isa = XCConfigurationList;
@@ -561,6 +569,7 @@
 				30426B6F1E1E7D430077F3A8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

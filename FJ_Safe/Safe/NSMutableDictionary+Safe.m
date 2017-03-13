@@ -8,6 +8,7 @@
 //
 
 #import <objc/runtime.h>
+#import "NSObject+Swizzling.h"
 #import "NSMutableDictionary+Safe.h"
 
 @implementation NSMutableDictionary (Safe)
@@ -22,47 +23,20 @@
         NSString *tmpRemoveStr = @"removeObjectForKey:";
         NSString *tmpSafeRemoveStr = @"safeMutable_removeObjectForKey:";
         
-        [self exchangeImplementationWithClassStr:@"__NSDictionaryM" originalMethodStr:tmpRemoveStr newMethodStr:tmpSafeRemoveStr];
+        [NSObject exchangeInstanceMethodWithSelfClass:NSClassFromString(@"__NSDictionaryM")
+                                     originalSelector:NSSelectorFromString(tmpRemoveStr)                                     swizzledSelector:NSSelectorFromString(tmpSafeRemoveStr)];
+        
         
         
         // 替换 setObject:forKey:
         NSString *tmpSetStr = @"setObject:forKey:";
         NSString *tmpSafeSetRemoveStr = @"safeMutable_setObject:forKey:";
         
-        [self exchangeImplementationWithClassStr:@"__NSDictionaryM" originalMethodStr:tmpSetStr newMethodStr:tmpSafeSetRemoveStr];
+        [NSObject exchangeInstanceMethodWithSelfClass:NSClassFromString(@"__NSDictionaryM")
+                                     originalSelector:NSSelectorFromString(tmpSetStr)                                     swizzledSelector:NSSelectorFromString(tmpSafeSetRemoveStr)];
+        
     });
     
-}
-
-// 获取 method
-+ (Method)methodOfClassStr:(NSString *)classStr selector:(SEL)selector {
-    return class_getInstanceMethod(NSClassFromString(classStr),selector);
-}
-
-// 添加 新方法 / 新方法 替换 原来 方法
-+ (void)exchangeImplementationWithClassStr:(NSString *)classStr originalMethodStr:(NSString *)originalMethodStr newMethodStr:(NSString *)newMethodStr {
-    
-    SEL originalSelector = NSSelectorFromString(originalMethodStr);
-    SEL swizzledSelector = NSSelectorFromString(newMethodStr);
-    
-    Method originalMethod = [NSMutableDictionary methodOfClassStr:classStr selector:NSSelectorFromString(originalMethodStr)];
-    Method swizzledMethod = [NSMutableDictionary methodOfClassStr:classStr selector:NSSelectorFromString(newMethodStr)];
-    
-    BOOL didAddMethod =
-    class_addMethod(NSClassFromString(classStr),
-                    originalSelector,
-                    method_getImplementation(swizzledMethod),
-                    method_getTypeEncoding(swizzledMethod));
-    
-    if (didAddMethod) {
-        class_replaceMethod(NSClassFromString(classStr),
-                            swizzledSelector,
-                            method_getImplementation(originalMethod),
-                            method_getTypeEncoding(originalMethod));
-        
-    } else {
-        method_exchangeImplementations(originalMethod, swizzledMethod);
-    }
 }
 
 #pragma mark --- implement method
