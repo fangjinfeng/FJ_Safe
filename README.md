@@ -2,6 +2,8 @@
 
 [FJ_Safe简书链接](http://www.jianshu.com/p/bea2bfed3f3f)
 
+**支持pod操作**
+
 NSString、NSArray、NSMutableString、NSMutableArray、NSMutableDictionary通过运行时直接给原生的插入、删除、截取等操作添加判断，防止崩溃。
 
 由于NSString、NSArray、NSMutableString、NSMutableArray、NSMutableDictionary这几个类型都是Class Clusters（类簇）设计模式设计出来的。
