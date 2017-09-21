@@ -25,6 +25,12 @@
         NSString *tmpThreeStr = @"safe_objectAtIndex:";
         NSString *tmpSecondStr = @"safe_singleObjectAtIndex:";
         
+        // 替换 objectAtIndexedSubscript
+        
+        NSString *tmpSubscriptStr = @"objectAtIndexedSubscript:";
+        NSString *tmpSecondSubscriptStr = @"safe_objectAtIndexedSubscript:";
+        
+        
         [NSObject exchangeInstanceMethodWithSelfClass:NSClassFromString(@"__NSArray0")
                                      originalSelector:NSSelectorFromString(tmpStr)                                     swizzledSelector:NSSelectorFromString(tmpFirstStr)];
         
@@ -33,6 +39,9 @@
         
         [NSObject exchangeInstanceMethodWithSelfClass:NSClassFromString(@"__NSArrayI")
                                      originalSelector:NSSelectorFromString(tmpStr)                                     swizzledSelector:NSSelectorFromString(tmpThreeStr)];
+        
+        [NSObject exchangeInstanceMethodWithSelfClass:NSClassFromString(@"__NSArrayI")
+                                     originalSelector:NSSelectorFromString(tmpSubscriptStr)                                     swizzledSelector:NSSelectorFromString(tmpSecondSubscriptStr)];
         
     });
 
@@ -79,6 +88,19 @@
         return nil;
     }
     return [self safe_ZeroObjectAtIndex:index];
+}
+
+/**
+ 取出NSArray 第index个 值 对应 __NSArrayI
+ 
+ @param idx 索引 idx
+ @return 返回值
+ */
+- (id)safe_objectAtIndexedSubscript:(NSUInteger)idx {
+    if (idx >= self.count){
+        return nil;
+    }
+    return [self safe_objectAtIndexedSubscript:idx];
 }
 
 
