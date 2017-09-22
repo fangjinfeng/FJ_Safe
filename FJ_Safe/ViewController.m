@@ -56,6 +56,7 @@
 
     // __NSArrayM 类型
     NSMutableArray *tmpMutableArrayM = [NSMutableArray arrayWithCapacity:0];
+    tmpMutableArrayM[100];
     [tmpMutableArrayM objectAtIndex:1000];
     [tmpMutableArrayM insertObject:nil atIndex:10000];
     [tmpMutableArrayM removeObject:nil];

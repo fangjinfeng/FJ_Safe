@@ -51,6 +51,13 @@
         [NSObject exchangeInstanceMethodWithSelfClass:NSClassFromString(@"__NSArrayM")
                                      originalSelector:NSSelectorFromString(tmpRemoveRangeStr)                                     swizzledSelector:NSSelectorFromString(tmpSafeRemoveRangeStr)];
         
+        
+        // 替换 objectAtIndexedSubscript
+        
+        NSString *tmpSubscriptStr = @"objectAtIndexedSubscript:";
+        NSString *tmpSecondSubscriptStr = @"safeMutable_objectAtIndexedSubscript:";
+        [NSObject exchangeInstanceMethodWithSelfClass:NSClassFromString(@"__NSArrayM")
+                                     originalSelector:NSSelectorFromString(tmpSubscriptStr)                                     swizzledSelector:NSSelectorFromString(tmpSecondSubscriptStr)];
     });
     
 }
@@ -137,5 +144,19 @@
     }
     
     [self safeMutable_insertObject:anObject atIndex:index];
+}
+
+
+/**
+ 取出NSArray 第index个 值 对应 __NSArrayI
+ 
+ @param idx 索引 idx
+ @return 返回值
+ */
+- (id)safeMutable_objectAtIndexedSubscript:(NSUInteger)idx {
+    if (idx >= self.count){
+        return nil;
+    }
+    return [self safeMutable_objectAtIndexedSubscript:idx];
 }
 @end
