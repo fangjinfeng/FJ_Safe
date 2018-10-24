@@ -12,7 +12,7 @@
 
 @implementation NSMutableString (Safe)
 
-#pragma mark --- init method
+#pragma mark -------------------------- Init Methods
 
 + (void)load {
     //只执行一次这个方法
@@ -23,7 +23,7 @@
         NSString *tmpSubFromStr = @"substringFromIndex:";
         NSString *tmpSafeSubFromStr = @"safeMutable_substringFromIndex:";
     
-        [NSObject exchangeInstanceMethodWithSelfClass:NSClassFromString(@"__NSCFString")
+        [NSObject fjf_exchangeInstanceMethodWithSelfClass:NSClassFromString(@"__NSCFString")
                                      originalSelector:NSSelectorFromString(tmpSubFromStr)                                     swizzledSelector:NSSelectorFromString(tmpSafeSubFromStr)];
         
         
@@ -31,7 +31,7 @@
         NSString *tmpSubToStr = @"substringToIndex:";
         NSString *tmpSafeSubToStr = @"safeMutable_substringToIndex:";
     
-        [NSObject exchangeInstanceMethodWithSelfClass:NSClassFromString(@"__NSCFString")
+        [NSObject fjf_exchangeInstanceMethodWithSelfClass:NSClassFromString(@"__NSCFString")
                                      originalSelector:NSSelectorFromString(tmpSubToStr)                                     swizzledSelector:NSSelectorFromString(tmpSafeSubToStr)];
         
         
@@ -39,7 +39,7 @@
         NSString *tmpSubRangeStr = @"substringWithRange:";
         NSString *tmpSafeSubRangeStr = @"safeMutable_substringWithRange:";
     
-        [NSObject exchangeInstanceMethodWithSelfClass:NSClassFromString(@"__NSCFString")
+        [NSObject fjf_exchangeInstanceMethodWithSelfClass:NSClassFromString(@"__NSCFString")
                                      originalSelector:NSSelectorFromString(tmpSubRangeStr)                                     swizzledSelector:NSSelectorFromString(tmpSafeSubRangeStr)];
         
 
@@ -48,7 +48,7 @@
         NSString *tmpRangeOfStr = @"rangeOfString:options:range:locale:";
         NSString *tmpSafeRangeOfStr = @"safeMutable_rangeOfString:options:range:locale:";
         
-        [NSObject exchangeInstanceMethodWithSelfClass:NSClassFromString(@"__NSCFString")
+        [NSObject fjf_exchangeInstanceMethodWithSelfClass:NSClassFromString(@"__NSCFString")
                                      originalSelector:NSSelectorFromString(tmpRangeOfStr)                                     swizzledSelector:NSSelectorFromString(tmpSafeRangeOfStr)];
         
         
@@ -57,8 +57,33 @@
         NSString *tmpSafeAppendStr = @"safeMutable_appendString:";
         
         
-        [NSObject exchangeInstanceMethodWithSelfClass:NSClassFromString(@"__NSCFString")
+        [NSObject fjf_exchangeInstanceMethodWithSelfClass:NSClassFromString(@"__NSCFString")
                                      originalSelector:NSSelectorFromString(tmpAppendStr)                                     swizzledSelector:NSSelectorFromString(tmpSafeAppendStr)];
+        
+        
+
+        // 替换  replaceCharactersInRange
+        NSString *tmpReplaceCharactersInRangeStr = @"replaceCharactersInRange:withString:";
+        NSString *tmpSafeReplaceCharactersInRangeStr = @"safeMutable_replaceCharactersInRange:withString:";
+        
+        
+        [NSObject fjf_exchangeInstanceMethodWithSelfClass:NSClassFromString(@"__NSCFString")
+                                         originalSelector:NSSelectorFromString(tmpReplaceCharactersInRangeStr)                                     swizzledSelector:NSSelectorFromString(tmpSafeReplaceCharactersInRangeStr)];
+
+        
+        //替换 insertString:atIndex:
+        NSString *tmpInsertStringStr = @"insertString:atIndex:";
+        NSString *tmpSafaInsertStringStr = @"safeMutable_insertString:atIndex:";
+        [NSObject fjf_exchangeInstanceMethodWithSelfClass:NSClassFromString(@"__NSCFString")
+                                         originalSelector:NSSelectorFromString(tmpInsertStringStr)                                     swizzledSelector:NSSelectorFromString(tmpSafaInsertStringStr)];
+        
+        
+        
+        //替换 deleteCharactersInRange
+        NSString *tmpDeleteCharactersInRangeStr = @"deleteCharactersInRange:";
+        NSString *tmpSafaDeleteCharactersInRangeStr = @"safeMutable_deleteCharactersInRange:";
+        [NSObject fjf_exchangeInstanceMethodWithSelfClass:NSClassFromString(@"__NSCFString")
+                                         originalSelector:NSSelectorFromString(tmpDeleteCharactersInRangeStr)                                     swizzledSelector:NSSelectorFromString(tmpSafaDeleteCharactersInRangeStr)];
         
         
     });
@@ -66,7 +91,8 @@
 }
 
 
-#pragma mark --- implement method
+#pragma mark -------------------------- Exchange Methods
+#pragma mark --- substringFromIndex:
 /****************************************  substringFromIndex:  ***********************************/
 /**
  从from位置截取字符串 对应 __NSCFString
@@ -82,7 +108,8 @@
 }
 
 
-/****************************************  substringFromIndex:  ***********************************/
+#pragma mark --- substringToIndex:
+/****************************************  substringToIndex:  ***********************************/
 /**
  从开始截取到to位置的字符串  对应  __NSCFString
  
@@ -97,7 +124,7 @@
 }
 
 
-
+#pragma mark --- rangeOfString:options:range:locale:
 /*********************************** rangeOfString:options:range:locale:  ***************************/
 /**
  搜索指定 字符串  对应  __NSCFString
@@ -130,7 +157,7 @@
 }
 
 
-
+#pragma mark --- substringWithRange:
 /*********************************** substringWithRange:  ***************************/
 /**
  截取指定范围的字符串  对应  __NSCFString
@@ -154,7 +181,8 @@
 }
 
 
-/*********************************** safeMutable_appendString:  ***************************/
+#pragma mark --- appendString:
+/*********************************** appendString:  ***************************/
 /**
  追加字符串 对应  __NSCFString
  
@@ -166,4 +194,57 @@
     }
     return [self safeMutable_appendString:aString];
 }
+
+#pragma mark ---  replaceCharactersInRange
+
+- (void)safeMutable_replaceCharactersInRange:(NSRange)range withString:(NSString *)aString {
+    
+    if (range.location > self.length) {
+        return;
+    }
+    
+    if (range.length > self.length) {
+        return;
+    }
+    
+    if ((range.location + range.length) > self.length) {
+        return;
+    }
+    
+    if (!aString) {
+        return;
+    }
+    
+   return [self safeMutable_replaceCharactersInRange:range withString:aString];
+}
+
+#pragma mark ---  insertString:atIndex:
+
+- (void)safeMutable_insertString:(NSString *)aString atIndex:(NSUInteger)loc {
+    if (loc > self.length) {
+        return;
+    }
+   return  [self safeMutable_insertString:aString atIndex:loc];
+}
+
+
+#pragma mark ---   deleteCharactersInRange
+
+- (void)safeMutable_deleteCharactersInRange:(NSRange)range {
+    
+    if (range.location > self.length) {
+        return;
+    }
+    
+    if (range.length > self.length) {
+        return;
+    }
+    
+    if ((range.location + range.length) > self.length) {
+        return;
+    }
+    return [self safeMutable_deleteCharactersInRange:range];
+}
+
+
 @end

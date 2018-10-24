@@ -11,7 +11,8 @@
 #import "NSObject+Swizzling.h"
 
 @implementation NSObject (Swizzling)
-+ (void)exchangeInstanceMethodWithSelfClass:(Class)selfClass
+#pragma mark -------------------------- Public Methods
++ (void)fjf_exchangeInstanceMethodWithSelfClass:(Class)selfClass
                            originalSelector:(SEL)originalSelector
                            swizzledSelector:(SEL)swizzledSelector {
     
@@ -31,4 +32,13 @@
     }
 }
 
+
++ (void)fjf_exchangeClassMethodWithSelfClass:(Class)selfClass
+                           originalSelector:(SEL)originalSelector
+                           swizzledSelector:(SEL)swizzledSelector {
+    
+    Method originalMethod = class_getClassMethod(selfClass, originalSelector);
+    Method swizzledMethod = class_getClassMethod(selfClass, swizzledSelector);
+    method_exchangeImplementations(originalMethod, swizzledMethod);
+}
 @end

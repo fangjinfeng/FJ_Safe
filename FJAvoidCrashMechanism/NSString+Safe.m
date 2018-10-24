@@ -13,7 +13,7 @@
 
 @implementation NSString (Safe)
 
-#pragma mark --- init method
+#pragma mark -------------------------- Init Methods
 
 + (void)load {
     //只执行一次这个方法
@@ -26,10 +26,10 @@
         NSString *tmpSafePointSubFromStr = @"safePoint_substringFromIndex:";
         
         
-        [NSObject exchangeInstanceMethodWithSelfClass:NSClassFromString(@"__NSCFConstantString")
+        [NSObject fjf_exchangeInstanceMethodWithSelfClass:NSClassFromString(@"__NSCFConstantString")
                                      originalSelector:NSSelectorFromString(tmpSubFromStr)                                     swizzledSelector:NSSelectorFromString(tmpSafeSubFromStr)];
         
-        [NSObject exchangeInstanceMethodWithSelfClass:NSClassFromString(@"NSTaggedPointerString")
+        [NSObject fjf_exchangeInstanceMethodWithSelfClass:NSClassFromString(@"NSTaggedPointerString")
                                      originalSelector:NSSelectorFromString(tmpSubFromStr)                                     swizzledSelector:NSSelectorFromString(tmpSafePointSubFromStr)];
         
 
@@ -42,10 +42,10 @@
         
         
         
-        [NSObject exchangeInstanceMethodWithSelfClass:NSClassFromString(@"__NSCFConstantString")
+        [NSObject fjf_exchangeInstanceMethodWithSelfClass:NSClassFromString(@"__NSCFConstantString")
                                      originalSelector:NSSelectorFromString(tmpSubToStr)                                     swizzledSelector:NSSelectorFromString(tmpSafeSubToStr)];
         
-        [NSObject exchangeInstanceMethodWithSelfClass:NSClassFromString(@"NSTaggedPointerString")
+        [NSObject fjf_exchangeInstanceMethodWithSelfClass:NSClassFromString(@"NSTaggedPointerString")
                                      originalSelector:NSSelectorFromString(tmpSubToStr)                                     swizzledSelector:NSSelectorFromString(tmpSafePointSubToStr)];
         
 
@@ -57,10 +57,10 @@
         NSString *tmpSafePointSubRangeStr = @"safePoint_substringWithRange:";
         
         
-        [NSObject exchangeInstanceMethodWithSelfClass:NSClassFromString(@"__NSCFConstantString")
+        [NSObject fjf_exchangeInstanceMethodWithSelfClass:NSClassFromString(@"__NSCFConstantString")
                                      originalSelector:NSSelectorFromString(tmpSubRangeStr)                                     swizzledSelector:NSSelectorFromString(tmpSafeSubRangeStr)];
         
-        [NSObject exchangeInstanceMethodWithSelfClass:NSClassFromString(@"NSTaggedPointerString")
+        [NSObject fjf_exchangeInstanceMethodWithSelfClass:NSClassFromString(@"NSTaggedPointerString")
                                      originalSelector:NSSelectorFromString(tmpSubRangeStr)                                     swizzledSelector:NSSelectorFromString(tmpSafePointSubRangeStr)];
         
         
@@ -71,18 +71,74 @@
         NSString *tmpSafePointRangeOfStr = @"safePoint_rangeOfString:options:range:locale:";
         
         
-        [NSObject exchangeInstanceMethodWithSelfClass:NSClassFromString(@"__NSCFConstantString")
+        [NSObject fjf_exchangeInstanceMethodWithSelfClass:NSClassFromString(@"__NSCFConstantString")
                                      originalSelector:NSSelectorFromString(tmpRangeOfStr)                                     swizzledSelector:NSSelectorFromString(tmpSafeRangeOfStr)];
         
-        [NSObject exchangeInstanceMethodWithSelfClass:NSClassFromString(@"NSTaggedPointerString")
+        [NSObject fjf_exchangeInstanceMethodWithSelfClass:NSClassFromString(@"NSTaggedPointerString")
                                      originalSelector:NSSelectorFromString(tmpRangeOfStr)                                     swizzledSelector:NSSelectorFromString(tmpSafePointRangeOfStr)];
         
+        
+        
+        // 替换 characterAtIndex:
+        NSString *tmpCharacterAtIndexStr = @"characterAtIndex:";
+        NSString *tmpSafeCharacterAtIndexStr = @"safe_characterAtIndex:";
+        NSString *tmpSafePointCharacterAtIndexStr = @"safePoint_characterAtIndex:";
+        
+        
+        [NSObject fjf_exchangeInstanceMethodWithSelfClass:NSClassFromString(@"__NSCFConstantString")
+                                         originalSelector:NSSelectorFromString(tmpCharacterAtIndexStr)                                     swizzledSelector:NSSelectorFromString(tmpSafeCharacterAtIndexStr)];
+        
+        [NSObject fjf_exchangeInstanceMethodWithSelfClass:NSClassFromString(@"NSTaggedPointerString")
+                                         originalSelector:NSSelectorFromString(tmpCharacterAtIndexStr)                                     swizzledSelector:NSSelectorFromString(tmpSafePointCharacterAtIndexStr)];
+        
+        
+        // 替换 stringByReplacingOccurrencesOfString:
+        NSString *tmpStringByReplacingOccurrencesOfStringStr = @"stringByReplacingOccurrencesOfString:withString:";
+        NSString *tmpSafeStringByReplacingOccurrencesOfStringStr = @"safe_stringByReplacingOccurrencesOfString:withString:";
+        NSString *tmpSafePointStringByReplacingOccurrencesOfStringStr  = @"safePoint_stringByReplacingOccurrencesOfString:withString:";
+        
+        
+        [NSObject fjf_exchangeInstanceMethodWithSelfClass:NSClassFromString(@"__NSCFConstantString")
+                                         originalSelector:NSSelectorFromString(tmpStringByReplacingOccurrencesOfStringStr)                                     swizzledSelector:NSSelectorFromString(tmpSafeStringByReplacingOccurrencesOfStringStr)];
+        
+        [NSObject fjf_exchangeInstanceMethodWithSelfClass:NSClassFromString(@"NSTaggedPointerString")
+                                         originalSelector:NSSelectorFromString(tmpStringByReplacingOccurrencesOfStringStr)                                     swizzledSelector:NSSelectorFromString(tmpSafePointStringByReplacingOccurrencesOfStringStr)];
+        
+        
+        
+        //替换 stringByReplacingOccurrencesOfString:withString:options:range:
+        
+        NSString *tmpStringByReplacingOccurrencesOfStringRangeStr = @"stringByReplacingOccurrencesOfString:withString:options:range:";
+        NSString *tmpSafeStringByReplacingOccurrencesOfStringRangeStr = @"safe_stringByReplacingOccurrencesOfString:withString:options:range:";
+        NSString *tmpSafePointStringByReplacingOccurrencesOfStringRangeStr  = @"safePoint_stringByReplacingOccurrencesOfString:withString:options:range:";
+        
+        
+        [NSObject fjf_exchangeInstanceMethodWithSelfClass:NSClassFromString(@"__NSCFConstantString")
+                                         originalSelector:NSSelectorFromString(tmpStringByReplacingOccurrencesOfStringRangeStr)                                     swizzledSelector:NSSelectorFromString(tmpSafeStringByReplacingOccurrencesOfStringRangeStr)];
+        
+        [NSObject fjf_exchangeInstanceMethodWithSelfClass:NSClassFromString(@"NSTaggedPointerString")
+                                         originalSelector:NSSelectorFromString(tmpStringByReplacingOccurrencesOfStringRangeStr)                                     swizzledSelector:NSSelectorFromString(tmpSafePointStringByReplacingOccurrencesOfStringRangeStr)];
+        
+        
+        // 替换 stringByReplacingCharactersInRange:withString:
+        
+        NSString *tmpStringByReplacingCharactersInRangeStr = @"stringByReplacingCharactersInRange:withString:";
+        NSString *tmpSafeStringByReplacingCharactersInRangeStr = @"safe_stringByReplacingCharactersInRange:withString:";
+        NSString *tmpSafePointStringByReplacingCharactersInRangeStr  = @"safePoint_stringByReplacingCharactersInRange:withString:";
+        
+        
+        [NSObject fjf_exchangeInstanceMethodWithSelfClass:NSClassFromString(@"__NSCFConstantString")
+                                         originalSelector:NSSelectorFromString(tmpStringByReplacingCharactersInRangeStr)                                     swizzledSelector:NSSelectorFromString(tmpSafeStringByReplacingCharactersInRangeStr)];
+        
+        [NSObject fjf_exchangeInstanceMethodWithSelfClass:NSClassFromString(@"NSTaggedPointerString")
+                                         originalSelector:NSSelectorFromString(tmpStringByReplacingCharactersInRangeStr)                                     swizzledSelector:NSSelectorFromString(tmpSafePointStringByReplacingCharactersInRangeStr)];
         
     });
 }
 
-#pragma mark --- implement method
+#pragma mark -------------------------- Exchange Methods
 
+#pragma mark ---- substringFromIndex
 /****************************************  substringFromIndex:  ***********************************/
 /**
  从from位置截取字符串 对应 __NSCFConstantString
@@ -109,6 +165,7 @@
     return [self safePoint_substringFromIndex:from];
 }
 
+#pragma mark ---- substringToIndex
 /****************************************  substringFromIndex:  ***********************************/
 /**
  从开始截取到to位置的字符串  对应  __NSCFConstantString
@@ -137,7 +194,7 @@
 }
 
 
-
+#pragma mark ---- rangeOfString:options:range:locale:
 /*********************************** rangeOfString:options:range:locale:  ***************************/
 /**
  搜索指定 字符串  对应  __NSCFConstantString
@@ -200,6 +257,7 @@
     return [self safePoint_rangeOfString:searchString options:mask range:rangeOfReceiverToSearch locale:locale];
 }
 
+#pragma mark ---- substringWithRange:
 /*********************************** substringWithRange:  ***************************/
 /**
  截取指定范围的字符串  对应  __NSCFConstantString
@@ -243,4 +301,121 @@
     return [self safePoint_substringWithRange:range];
 }
 
+#pragma mark ---- characterAtIndex
+
+- (unichar)safe_characterAtIndex:(NSUInteger)index {
+    unichar characteristic;
+    if (index < self.length) {
+        characteristic = [self safe_characterAtIndex:index];
+    }
+    
+    return characteristic;
+};
+
+- (unichar)safePoint_characterAtIndex:(NSUInteger)index {
+    unichar characteristic;
+    if (index < self.length) {
+        characteristic = [self safePoint_characterAtIndex:index];
+    }
+
+    return characteristic;
+};
+
+#pragma mark ---- stringByReplacingOccurrencesOfString:
+
+- (NSString *)safe_stringByReplacingOccurrencesOfString:(NSString *)target withString:(NSString *)replacement {
+    
+    if (!target) {
+        return self;
+    }
+    
+    if (!replacement) {
+        return self;
+    }
+    return [self safePoint_stringByReplacingOccurrencesOfString:target withString:replacement];
+}
+
+- (NSString *)safePoint_stringByReplacingOccurrencesOfString:(NSString *)target withString:(NSString *)replacement {
+    
+    if (!target) {
+        return self;
+    }
+    
+    if (!replacement) {
+        return self;
+    }
+    return [self safePoint_stringByReplacingOccurrencesOfString:target withString:replacement];
+}
+
+#pragma mark - stringByReplacingOccurrencesOfString:withString:options:range:
+
+- (NSString *)safe_stringByReplacingOccurrencesOfString:(NSString *)target withString:(NSString *)replacement options:(NSStringCompareOptions)options range:(NSRange)searchRange {
+    
+    NSString *newStr = nil;
+    
+    @try {
+        newStr = [self safe_stringByReplacingOccurrencesOfString:target withString:replacement options:options range:searchRange];
+    }
+    @catch (NSException *exception) {
+        
+        newStr = nil;
+    }
+    @finally {
+        return newStr;
+    }
+}
+
+- (NSString *)safePoint_stringByReplacingOccurrencesOfString:(NSString *)target withString:(NSString *)replacement options:(NSStringCompareOptions)options range:(NSRange)searchRange {
+    
+    NSString *newStr = nil;
+    
+    @try {
+        newStr = [self safePoint_stringByReplacingOccurrencesOfString:target withString:replacement options:options range:searchRange];
+    }
+    @catch (NSException *exception) {
+        
+        newStr = nil;
+    }
+    @finally {
+        return newStr;
+    }
+}
+
+
+//=================================================================
+//       stringByReplacingCharactersInRange:withString:
+//=================================================================
+#pragma mark - stringByReplacingCharactersInRange:withString:
+
+- (NSString *)safe_stringByReplacingCharactersInRange:(NSRange)range withString:(NSString *)replacement {
+    
+    
+    NSString *newStr = nil;
+    
+    @try {
+        newStr = [self safe_stringByReplacingCharactersInRange:range withString:replacement];
+    }
+    @catch (NSException *exception) {
+        newStr = nil;
+    }
+    @finally {
+        return newStr;
+    }
+}
+
+- (NSString *)safePoint_stringByReplacingCharactersInRange:(NSRange)range withString:(NSString *)replacement {
+    
+    
+    NSString *newStr = nil;
+    
+    @try {
+        newStr = [self safePoint_stringByReplacingCharactersInRange:range withString:replacement];
+    }
+    @catch (NSException *exception) {
+        newStr = nil;
+    }
+    @finally {
+        return newStr;
+    }
+}
 @end

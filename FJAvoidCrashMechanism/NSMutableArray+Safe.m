@@ -14,7 +14,7 @@
 
 @implementation NSMutableArray (Safe)
 
-#pragma mark --- init method
+#pragma mark -------------------------- Init Methods
 
 + (void)load {
     //只执行一次这个方法
@@ -24,7 +24,7 @@
         //替换 objectAtIndex:
         NSString *tmpGetStr = @"objectAtIndex:";
         NSString *tmpSafeGetStr = @"safeMutable_objectAtIndex:";
-        [NSObject exchangeInstanceMethodWithSelfClass:NSClassFromString(@"__NSArrayM")
+        [NSObject fjf_exchangeInstanceMethodWithSelfClass:NSClassFromString(@"__NSArrayM")
                                      originalSelector:NSSelectorFromString(tmpGetStr)                                     swizzledSelector:NSSelectorFromString(tmpSafeGetStr)];
         
         //替换 removeObjectsInRange:
@@ -32,7 +32,7 @@
         NSString *tmpSafeRemoveStr = @"safeMutable_removeObjectsInRange:";
         
 
-        [NSObject exchangeInstanceMethodWithSelfClass:NSClassFromString(@"__NSArrayM")
+        [NSObject fjf_exchangeInstanceMethodWithSelfClass:NSClassFromString(@"__NSArrayM")
                                      originalSelector:NSSelectorFromString(tmpRemoveStr)                                     swizzledSelector:NSSelectorFromString(tmpSafeRemoveStr)];
         
         
@@ -41,14 +41,14 @@
         NSString *tmpSafeInsertStr = @"safeMutable_insertObject:atIndex:";
         
         
-        [NSObject exchangeInstanceMethodWithSelfClass:NSClassFromString(@"__NSArrayM")
+        [NSObject fjf_exchangeInstanceMethodWithSelfClass:NSClassFromString(@"__NSArrayM")
                                      originalSelector:NSSelectorFromString(tmpInsertStr)                                     swizzledSelector:NSSelectorFromString(tmpSafeInsertStr)];
         
         //替换 removeObject:inRange:
         NSString *tmpRemoveRangeStr = @"removeObject:inRange:";
         NSString *tmpSafeRemoveRangeStr = @"safeMutable_removeObject:inRange:";
         
-        [NSObject exchangeInstanceMethodWithSelfClass:NSClassFromString(@"__NSArrayM")
+        [NSObject fjf_exchangeInstanceMethodWithSelfClass:NSClassFromString(@"__NSArrayM")
                                      originalSelector:NSSelectorFromString(tmpRemoveRangeStr)                                     swizzledSelector:NSSelectorFromString(tmpSafeRemoveRangeStr)];
         
         
@@ -56,13 +56,25 @@
         
         NSString *tmpSubscriptStr = @"objectAtIndexedSubscript:";
         NSString *tmpSecondSubscriptStr = @"safeMutable_objectAtIndexedSubscript:";
-        [NSObject exchangeInstanceMethodWithSelfClass:NSClassFromString(@"__NSArrayM")
+        [NSObject fjf_exchangeInstanceMethodWithSelfClass:NSClassFromString(@"__NSArrayM")
                                      originalSelector:NSSelectorFromString(tmpSubscriptStr)                                     swizzledSelector:NSSelectorFromString(tmpSecondSubscriptStr)];
+        
+        // 替换 getObjects:range:
+        NSString *tmpFirstGetObjectsRangeStr = @"getObjects:range:";
+        NSString *tmpSecondGetObjectsRangeStr = @"safeMutable_getObjects:range:";
+        [NSObject fjf_exchangeInstanceMethodWithSelfClass:NSClassFromString(@"__NSArrayM")
+                                         originalSelector:NSSelectorFromString(tmpFirstGetObjectsRangeStr)                                     swizzledSelector:NSSelectorFromString(tmpSecondGetObjectsRangeStr)];
+        
+        // 替换 setObject:atIndexedSubscript:
+        NSString *tmpFirstSetObjectAtIndexedSubscriptStr = @"setObject:atIndexedSubscript:";
+        NSString *tmpSecondSetObjectAtIndexedSubscriptStr = @"safe_setObject:atIndexedSubscript:";
+        [NSObject fjf_exchangeInstanceMethodWithSelfClass:NSClassFromString(@"__NSArrayM")
+                                         originalSelector:NSSelectorFromString(tmpFirstSetObjectAtIndexedSubscriptStr)                                     swizzledSelector:NSSelectorFromString(tmpSecondSetObjectAtIndexedSubscriptStr)];
     });
     
 }
 
-#pragma mark --- implement method
+#pragma mark -------------------------- Exchange Methods
 
 /**
  取出NSArray 第index个 值
@@ -158,5 +170,48 @@
         return nil;
     }
     return [self safeMutable_objectAtIndexedSubscript:idx];
+}
+
+
+/**
+ 获取range范围数组并赋值给objects
+ 
+ @param objects objects
+ @param range 范围
+ */
+- (void)safeMutable_getObjects:(__unsafe_unretained id  _Nonnull *)objects range:(NSRange)range {
+    if (range.location > self.count) {
+        return;
+    }
+    
+    if (range.length > self.count) {
+        return;
+    }
+    
+    if ((range.location + range.length) > self.count) {
+        return;
+    }
+    
+    return [self safeMutable_getObjects:objects range:range];
+}
+
+
+//=================================================================
+//                    array set object at index
+//=================================================================
+#pragma mark - get object from array
+
+
+- (void)safe_setObject:(id)obj atIndexedSubscript:(NSUInteger)idx {
+    
+    if (idx >= self.count) {
+        return;
+    }
+    
+    if (!obj) {
+        return;
+    }
+    
+    return [self safe_setObject:obj atIndexedSubscript:idx];
 }
 @end

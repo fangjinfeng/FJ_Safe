@@ -12,7 +12,7 @@
 #import "NSMutableDictionary+Safe.h"
 
 @implementation NSMutableDictionary (Safe)
-#pragma mark --- init method
+#pragma mark -------------------------- Init Methods
 
 + (void)load {
     //只执行一次这个方法
@@ -23,23 +23,30 @@
         NSString *tmpRemoveStr = @"removeObjectForKey:";
         NSString *tmpSafeRemoveStr = @"safeMutable_removeObjectForKey:";
         
-        [NSObject exchangeInstanceMethodWithSelfClass:NSClassFromString(@"__NSDictionaryM")
+        [NSObject fjf_exchangeInstanceMethodWithSelfClass:NSClassFromString(@"__NSDictionaryM")
                                      originalSelector:NSSelectorFromString(tmpRemoveStr)                                     swizzledSelector:NSSelectorFromString(tmpSafeRemoveStr)];
         
-        
+        if (@available(iOS 11.0, *)) {
+            NSString *tmpSetObjectSubStr = @"setObject:forKeyedSubscript:";
+            NSString *tmpSafeSetObjectSubStr = @"safe_setObject:forKeyedSubscript:";
+            
+            [NSObject fjf_exchangeInstanceMethodWithSelfClass:NSClassFromString(@"__NSDictionaryM")
+                                             originalSelector:NSSelectorFromString(tmpSetObjectSubStr)                                     swizzledSelector:NSSelectorFromString(tmpSafeSetObjectSubStr)];
+        }
+
         
         // 替换 setObject:forKey:
         NSString *tmpSetStr = @"setObject:forKey:";
         NSString *tmpSafeSetRemoveStr = @"safeMutable_setObject:forKey:";
         
-        [NSObject exchangeInstanceMethodWithSelfClass:NSClassFromString(@"__NSDictionaryM")
+        [NSObject fjf_exchangeInstanceMethodWithSelfClass:NSClassFromString(@"__NSDictionaryM")
                                      originalSelector:NSSelectorFromString(tmpSetStr)                                     swizzledSelector:NSSelectorFromString(tmpSafeSetRemoveStr)];
         
     });
     
 }
 
-#pragma mark --- implement method
+#pragma mark -------------------------- Exchange Methods
 
 /**
  根据akey 移除 对应的 键值对
@@ -69,4 +76,14 @@
     return [self safeMutable_setObject:anObject forKey:aKey];
 }
 
+#pragma mark - setObject:forKeyedSubscript:
+- (void)safe_setObject:(id)anObject forKeyedSubscript:(id<NSCopying>)aKey {
+    if (!anObject) {
+        return;
+    }
+    if (!aKey) {
+        return;
+    }
+    return [self safe_setObject:anObject forKeyedSubscript:aKey];
+}
 @end
